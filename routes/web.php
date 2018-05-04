@@ -11,16 +11,20 @@
 |
 */
 
-Route::get('projects/create','ProjectsController@create');
-Route::get('projects','ProjectsController@store');
-
-
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('skills', function() {
-	return ['Laravel','Vue','PHP','Javascript','Tooling'];
+Route::get('/phpinfo', function () {
+	return view('phpinfo');
+});
+
+Route::get('projects/create','ProjectsController@create');
+Route::post('/projects','ProjectsController@store');
+
+
+Route::get('/', function () {
+    return view('welcome');
 });
 
 Route::get('/phpinfo', function () {

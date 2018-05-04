@@ -26,14 +26,12 @@
 
     				<input class="input" type="text" id="name" v-model="name">
 
-    				<span class="help is-danger" v-text=""></span>
     			</div>
     			<div class="control">
     				<label for="description" class="label">Project Description:</label>
 
     				<input type="text" id="description" name="description" class="input" v-model="description">
 
-    				<span class="help is-danger" v-text=""></span>
     			</div>
 
     			<div class="control">
