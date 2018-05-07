@@ -25,9 +25,9 @@ class ProjectsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $this -> validate(reqeust(), [
+        $this -> validate(request(), [
             'name' => 'required',
             'description' => 'required'
         ]);
