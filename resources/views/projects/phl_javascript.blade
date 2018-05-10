@@ -1,0 +1,81 @@
+<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-TGRB76T"
+ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- Querystring script for persisting inbound affiliate ids and sub ids via querystring -->
+<script type="application/javascript" src="https://previous.purehealthyliving.net/querystring.js"></script>
+<!-- End Querystring -->
+
+<script> /*Script for managing squarespace pre configured newsletter-form*/
+  
+$( document ).ready(function() {
+  var formLocation = document.location.href;
+  popUp = (((formLocation.search('subscribe'))>0)? false: true);
+  window.setTimeout(function(){formChange();}, 2500);
+});
+
+function formChange() {
+  theform = $(".newsletter-form");
+  theform.attr("onsubmit","event.preventDefault();formPost()");
+  theform.append("<input type='hidden' name='a' value='304'>");
+  $('.form-submission-text').empty();
+}
+
+
+function formPost()  { //This is the replacement script for the default form action
+	var currentEmail = new emailManager();
+	if (currentEmail.validateEmailform()) {
+      currentEmail.cakePosting();      
+	} else {
+		$(".field-error").remove();
+		$(".newsletter-form-header-description").html("<div style=\"background-color: #fed9db;color: #f23d3d;padding: 2px;font-size: 12px;\">Email Address is not valid. Email addresses should follow the format user@domain.com.</div>");
+	}
+}
+
+function  emailManager()  { //This is the object used to validate the form of the email and test email oversight for email status
+	this.email= $("input[name=email]").val();
+	this.cakePosting = function() { // Email posting to our newsletter list done through Cake
+      	var form = $(".newsletter-form")[0];
+		var data = new FormData(form);
+		console.log (data);
+		$.ajax({
+			type: "POST",
+			enctype: 'multipart/form-data',
+			url: "https://middleware.purehealthyliving.net/api/submit-new-subscriber",
+			data: data,
+			processData: false,
+			contentType: false,
+			cache: false,
+			timeout: 600000,
+	    success: function(data, status) {
+              console.log ("middleware call:"+ status + " Email Submission:" + data);
+              if (data == "success") {
+                if(popUp) {
+                  $('.form-submission-text').html('Thank You');
+                } else {
+                  window.location.assign("https://purehealthyliving.net/subscribe-thanks"); 
+                }
+              } else {
+                if(popUp) {
+                  $('.form-submission-text').html("There was an error, please <a href='https://purehealthyliving.net/contact-us/' style='text-decoration: underline'>contact</a> us directly if you feel this is a mistake");  
+                } else {
+                  window.location.assign("https://purehealthyliving.net/subscribe-error");
+                }
+              }
+	    },
+	    error: function() {
+	        alert('error handing here:'+errorThrown);
+	    }
+		});
+	}   
+    
+  this.validateEmailform = function () { // RegEx test to validate the form of the email
+   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.email)) {
+      return (true);
+    }
+    return (false);
+  }
+}
+</script>
